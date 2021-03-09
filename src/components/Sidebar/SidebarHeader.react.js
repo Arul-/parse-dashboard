@@ -36,9 +36,6 @@ export default class SidebarHeader extends React.Component {
           <div className={styles.version}>
             <div>
               {customBrandTitle || 'Parse Dashboard'} {version}
-              <div>
-                {this.state.dashboardUser}
-              </div>
             </div>
           </div>
         </Link>
