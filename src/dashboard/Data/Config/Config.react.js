@@ -53,7 +53,7 @@ class Config extends TableView {
         section='Core'
         subsection='Config'>
         <Button color='white' value='Create a parameter' onClick={this.createParameter.bind(this)} />
-        <Button color='white' value='Apply to Env and Restart' onClick={this.applyAndRestart.bind(this)} />
+        <Button color='white' value='Apply to Environment and Restart' onClick={this.applyAndRestart.bind(this)} />
       </Toolbar>
     );
   }
@@ -229,10 +229,13 @@ class Config extends TableView {
 
   applyAndRestart() {
     Parse.Cloud.run(
-      'ApplyConfigToEnvironmentAndRestart',
+      'ConfigApplyToEnvironmentAndRestart',
       {},
       {useMasterKey: true}
-    ).then(alert('Environment updated. Please refresh your browser'));
+    ).then(
+      alert('Environment updated. Please refresh your browser'),
+      alert('Environment updated. Please refresh your browser')
+    );
   }
 }
 
