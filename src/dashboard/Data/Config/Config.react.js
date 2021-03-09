@@ -5,20 +5,20 @@
  * This source code is licensed under the license found in the LICENSE file in
  * the root directory of this source tree.
  */
-import { ActionTypes }        from 'lib/stores/ConfigStore';
-import Button                 from 'components/Button/Button.react';
-import ConfigDialog           from 'dashboard/Data/Config/ConfigDialog.react';
-import DeleteParameterDialog  from 'dashboard/Data/Config/DeleteParameterDialog.react';
-import EmptyState             from 'components/EmptyState/EmptyState.react';
-import Icon                   from 'components/Icon/Icon.react';
-import { isDate }             from 'lib/DateUtils';
-import Parse                  from 'parse';
-import React                  from 'react';
-import SidebarAction          from 'components/Sidebar/SidebarAction';
-import subscribeTo            from 'lib/subscribeTo';
-import TableHeader            from 'components/Table/TableHeader.react';
-import TableView              from 'dashboard/TableView.react';
-import Toolbar                from 'components/Toolbar/Toolbar.react';
+import {ActionTypes} from 'lib/stores/ConfigStore';
+import Button from 'components/Button/Button.react';
+import ConfigDialog from 'dashboard/Data/Config/ConfigDialog.react';
+import DeleteParameterDialog from 'dashboard/Data/Config/DeleteParameterDialog.react';
+import EmptyState from 'components/EmptyState/EmptyState.react';
+import Icon from 'components/Icon/Icon.react';
+import {isDate} from 'lib/DateUtils';
+import Parse from 'parse';
+import React from 'react';
+import SidebarAction from 'components/Sidebar/SidebarAction';
+import subscribeTo from 'lib/subscribeTo';
+import TableHeader from 'components/Table/TableHeader.react';
+import TableView from 'dashboard/TableView.react';
+import Toolbar from 'components/Toolbar/Toolbar.react';
 
 @subscribeTo('Config', 'config')
 class Config extends TableView {
@@ -53,6 +53,7 @@ class Config extends TableView {
         section='Core'
         subsection='Config'>
         <Button color='white' value='Create a parameter' onClick={this.createParameter.bind(this)} />
+        <Button color='white' value='Apply to Env and Restart' onClick={this.applyAndRestart.bind(this)} />
       </Toolbar>
     );
   }
@@ -129,7 +130,7 @@ class Config extends TableView {
       }
       openModal()
     }
-  
+
     let openDeleteParameterDialog = () => this.setState({
       showDeleteParameterDialog: true,
       modalParam: data.param
@@ -224,6 +225,14 @@ class Config extends TableView {
       modalValue: '',
       modalMasterKeyOnly: false
     });
+  }
+
+  applyAndRestart() {
+    Parse.Cloud.run(
+      'ApplyConfigToEnvironmentAndRestart',
+      {},
+      {useMasterKey: true}
+    ).then(alert('Environment updated. Please refresh your browser'));
   }
 }
 
