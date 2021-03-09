@@ -22,6 +22,7 @@ Parse Dashboard is a standalone dashboard for managing your [Parse Server](https
   * [GraphQL Playground](#graphql-playground)    
   * [App Icon Configuration](#app-icon-configuration)
   * [App Background Color Configuration](#app-background-color-configuration)
+  * [Custom Branding](#custom-branding)
   * [Other Configuration Options](#other-configuration-options)
 * [Running as Express Middleware](#running-as-express-middleware)
 * [Deploying Parse Dashboard](#deploying-parse-dashboard)
@@ -234,6 +235,13 @@ Parse Dashboard supports adding an optional background color for each app, so yo
   ]
 }
 ```
+
+## Custom Branding
+
+- You can set `customBrandIcon` with relative path from `iconsFolder`. This could be your custom logo which will appear on login screen and on the top of sidebar. Icon should be square (same height and width), SVG or PNG with transparent background.
+- You can set `customBrandTitle` which will be visible on top of sidebar instead of `Parse Dashboard`.
+- You can set `customBrandColorPrimary` which will be background color at login screen.
+
 
 ## Other Configuration Options
 
