@@ -35,7 +35,7 @@ class Webhooks extends TableView {
   constructor() {
     super();
     this.section = 'Core';
-    this.subsection = 'Webhooks';
+    this.subsection = 'Hooks';
     this.action = new SidebarAction('Create a webhook', this.openNewWebhookModal.bind(this));
     this.state = {
       showNewWebhookModal: false,
@@ -64,7 +64,7 @@ class Webhooks extends TableView {
   renderToolbar() {
     return <Toolbar
       section='Integrations'
-      subsection='Webhooks'>
+      subsection='Hooks'>
       <Button
         color='white'
         value='Create a Webhook'
@@ -283,7 +283,7 @@ class Webhooks extends TableView {
 
   renderEmpty() {
     return <EmptyState
-      title='Webhooks'
+      title='Hooks'
       description={<span>Use webhooks to run Cloud Code or connect Parse to your own server. <a href='http://docs.parseplatform.org/cloudcode/guide/#cloud-code-webhooks' target='_blank'>Learn more</a>.</span>}
       icon='gears'
       cta='Create a Webhook'
