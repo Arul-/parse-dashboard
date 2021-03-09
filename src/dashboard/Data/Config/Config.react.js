@@ -53,6 +53,7 @@ class Config extends TableView {
         section='Core'
         subsection='Config'>
         <Button color='white' value='Create a parameter' onClick={this.createParameter.bind(this)} />
+        &nbsp;
         <Button color='white' value='Apply to Environment and Restart' onClick={this.applyAndRestart.bind(this)} />
       </Toolbar>
     );
@@ -232,8 +233,7 @@ class Config extends TableView {
       'ConfigApplyToEnvironmentAndRestart',
       {},
       {useMasterKey: true}
-    ).then(
-      alert('Environment updated. Please refresh your browser'),
+    ).finally(
       alert('Environment updated. Please refresh your browser')
     );
   }
