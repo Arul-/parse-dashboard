@@ -178,13 +178,21 @@ module.exports = function(config, options) {
           ${errors.join(' ')}
         </div>`
       }
+      const customBrandIcon = config.customBrandIcon;
+      const customBrandColorPrimary = config.customBrandColorPrimary;
       res.send(`<!DOCTYPE html>
         <head>
           <link rel="shortcut icon" type="image/x-icon" href="${mountPath}favicon.ico" />
           <base href="${mountPath}"/>
           <script>
             PARSE_DASHBOARD_PATH = "${mountPath}";
+            ${customBrandIcon && 'CUSTOM_BRAND_ICON = "' + customBrandIcon + '";'}
           </script>
+          <style>
+            body {
+              ${customBrandColorPrimary && `background-color: ${customBrandColorPrimary} !important;`}
+            }
+          </style>
         </head>
         <html>
           <title>Parse Dashboard</title>
@@ -206,12 +214,16 @@ module.exports = function(config, options) {
       if (users && req.user && req.user.matchingUsername ) {
         res.append('username', req.user.matchingUsername);
       }
+      const customBrandIcon = config.customBrandIcon;
+      const customBrandTitle = config.customBrandTitle;
       res.send(`<!DOCTYPE html>
         <head>
           <link rel="shortcut icon" type="image/x-icon" href="${mountPath}favicon.ico" />
           <base href="${mountPath}"/>
           <script>
             PARSE_DASHBOARD_PATH = "${mountPath}";
+            ${customBrandIcon && 'CUSTOM_BRAND_ICON = "' + customBrandIcon + '";'}
+            ${customBrandTitle && 'CUSTOM_BRAND_TITLE = "' + customBrandTitle + '";'}
           </script>
         </head>
         <html>
