@@ -19,7 +19,6 @@ import subscribeTo from 'lib/subscribeTo';
 import TableHeader from 'components/Table/TableHeader.react';
 import TableView from 'dashboard/TableView.react';
 import Toolbar from 'components/Toolbar/Toolbar.react';
-import {useHistory} from "react-router";
 
 @subscribeTo('Config', 'config')
 class Config extends TableView {
@@ -230,7 +229,6 @@ class Config extends TableView {
   }
 
   applyAndRestart() {
-    const history = useHistory();
     Parse.Cloud.run(
       'ConfigApplyToEnvironmentAndRestart',
       {},
@@ -238,7 +236,7 @@ class Config extends TableView {
     ).then(
       alert('Environment updated. Server will restart.\n\nPlease login again')
     ).then(
-      history.push('/logout')
+      this.props.history.push('/logout')
     );
   }
 }
