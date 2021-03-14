@@ -229,14 +229,13 @@ class Config extends TableView {
   }
 
   applyAndRestart() {
+    const mountPath = window.PARSE_DASHBOARD_PATH;
     Parse.Cloud.run(
       'ConfigApplyToEnvironmentAndRestart',
       {},
       {useMasterKey: true}
     ).then(
-      alert('Environment updated. Server will restart.\n\nPlease login again')
-    ).then(
-      this.props.history.push('/logout')
+      this.props.history.push(`${mountPath}logout`)
     );
   }
 }
