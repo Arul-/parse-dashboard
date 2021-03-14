@@ -19,6 +19,7 @@ import subscribeTo from 'lib/subscribeTo';
 import TableHeader from 'components/Table/TableHeader.react';
 import TableView from 'dashboard/TableView.react';
 import Toolbar from 'components/Toolbar/Toolbar.react';
+import {useHistory} from "react-router";
 
 @subscribeTo('Config', 'config')
 class Config extends TableView {
@@ -54,7 +55,7 @@ class Config extends TableView {
         subsection='Config'>
         <Button color='white' value='Create a parameter' onClick={this.createParameter.bind(this)} />
         &nbsp;
-        <Button color='white' value='Apply to Environment and Restart' onClick={this.applyAndRestart.bind(this)} />
+        <Button color='red' value='Apply to Environment and Restart' onClick={this.applyAndRestart.bind(this)} />
       </Toolbar>
     );
   }
@@ -229,12 +230,15 @@ class Config extends TableView {
   }
 
   applyAndRestart() {
+    const history = useHistory();
     Parse.Cloud.run(
       'ConfigApplyToEnvironmentAndRestart',
       {},
       {useMasterKey: true}
-    ).finally(
-      alert('Environment updated. Please refresh your browser')
+    ).then(
+      alert('Environment updated. Server will restart.\n\nPlease login again')
+    ).then(
+      history.push('/logout')
     );
   }
 }
