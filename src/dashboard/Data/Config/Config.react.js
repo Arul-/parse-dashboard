@@ -232,7 +232,9 @@ class Config extends TableView {
       'ConfigApplyToEnvironmentAndRestart',
       {},
       {useMasterKey: true}
-    ).then(
+    ).then(result => {
+      return new Promise(resolve => setTimeout(() => resolve(result), 1000));
+    }).then(
       window.location.href = window.PARSE_DASHBOARD_PATH + 'logout'
     );
   }
