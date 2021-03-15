@@ -103,7 +103,12 @@ const PARSE_DOT_COM_SERVER_INFO = {
     },
     playground: {
       evalCode: true
-    }
+    },
+    analytics: {
+      slowQueries: true,
+      performanceAnalysis: true,
+      retentionAnalysis: true,
+    },
   },
   parseServerVersion: 'Parse.com',
 }
