@@ -15,7 +15,7 @@ import styles        from 'dashboard/Data/CloudCode/CloudCode.scss';
 import Toolbar       from 'components/Toolbar/Toolbar.react';
 
 function getPath(params) {
-  return params.splat;
+  return params.url;
 }
 
 export default class CloudCode extends DashboardView {
@@ -31,12 +31,12 @@ export default class CloudCode extends DashboardView {
   }
 
   componentWillMount() {
-    this.fetchSource(this.context.currentApp, getPath(this.props.params));
+    this.fetchSource(this.context.currentApp, getPath(this.props.params || this.props.match.params));
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
     if (this.context !== nextContext) {
-      this.fetchSource(nextContext.currentApp, getPath(nextProps.params));
+      this.fetchSource(nextContext.currentApp, getPath(nextProps.params || nextProps.match.params));
     }
   }
 
@@ -66,7 +66,7 @@ export default class CloudCode extends DashboardView {
   }
 
   renderSidebar() {
-    let current = getPath(this.props.params) || '';
+    let current = getPath(this.props.params || this.props.match.params) || '';
     let files = this.state.files;
     if (!files) {
       return null;
