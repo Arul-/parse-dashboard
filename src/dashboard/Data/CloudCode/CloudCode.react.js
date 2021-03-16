@@ -15,7 +15,7 @@ import styles        from 'dashboard/Data/CloudCode/CloudCode.scss';
 import Toolbar       from 'components/Toolbar/Toolbar.react';
 
 function getPath(params) {
-  return params.url;
+  return params.url || '';
 }
 
 export default class CloudCode extends DashboardView {
@@ -90,7 +90,7 @@ export default class CloudCode extends DashboardView {
   renderContent() {
     let toolbar = null;
     let content = null;
-    let fileName = getPath(this.props.params);
+    let fileName = getPath(this.props.params || this.props.match.params);
 
     if (!this.state.files || Object.keys(this.state.files).length === 0) {
       content = (
