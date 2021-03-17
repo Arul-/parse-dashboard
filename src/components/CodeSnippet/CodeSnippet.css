@@ -183,34 +183,43 @@ pre.line-numbers > code {
   top: 10px;
 }
 
+pre[class*="language-"].line-numbers {
+  position: relative;
+  padding-left: 3.8em;
+  counter-reset: linenumber;
+}
+
+pre[class*="language-"].line-numbers > code {
+  position: relative;
+  white-space: inherit;
+}
+
 .line-numbers .line-numbers-rows {
   position: absolute;
   pointer-events: none;
-  top: -14px;
+  top: 0;
   font-size: 100%;
   left: -3.8em;
-  width: 3em;
-  /* works for line-numbers below 1000 lines */
-  padding-top: 10px;
-  margin-bottom: 100px;
+  width: 3em; /* works for line-numbers below 1000 lines */
+  letter-spacing: -1px;
+  border-right: 1px solid #999;
+
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+
 }
 
 .line-numbers-rows > span {
-  pointer-events: none;
   display: block;
   counter-increment: linenumber;
 }
 
 .line-numbers-rows > span:before {
   content: counter(linenumber);
-  color: #343445;
+  color: #999;
   display: block;
-  font-size: 10px;
-  font-family: 'Dosis';
-  padding-right: 0;
-  text-align: center;
+  padding-right: 0.8em;
+  text-align: right;
 }
