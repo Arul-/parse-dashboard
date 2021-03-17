@@ -9,6 +9,7 @@ pre[class*="language-"] {
   color: #f8f8f2;
   background: none;
   font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  font-size: 13px;
   text-align: left;
   white-space: pre;
   word-spacing: normal;
@@ -157,4 +158,59 @@ pre[class*="language-"] {
   .token.url {
     font-weight: normal;
   }
+}
+
+pre.line-numbers {
+  position: relative;
+  padding-left: 3.5em;
+  counter-reset: linenumber;
+  padding-top: 0px;
+  padding-bottom: 20px;
+}
+
+pre.line-numbers:before {
+  display: block;
+  content: '';
+  background: #66637A;
+  height: 100%;
+  width: 33px;
+  position: absolute;
+  left: 0;
+}
+
+pre.line-numbers > code {
+  position: relative;
+  top: 10px;
+}
+
+.line-numbers .line-numbers-rows {
+  position: absolute;
+  pointer-events: none;
+  top: -14px;
+  font-size: 100%;
+  left: -3.8em;
+  width: 3em;
+  /* works for line-numbers below 1000 lines */
+  padding-top: 10px;
+  margin-bottom: 100px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.line-numbers-rows > span {
+  pointer-events: none;
+  display: block;
+  counter-increment: linenumber;
+}
+
+.line-numbers-rows > span:before {
+  content: counter(linenumber);
+  color: #343445;
+  display: block;
+  font-size: 10px;
+  font-family: 'Dosis';
+  padding-right: 0;
+  text-align: center;
 }
