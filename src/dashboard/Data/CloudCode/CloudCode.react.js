@@ -5,19 +5,17 @@
  * This source code is licensed under the license found in the LICENSE file in
  * the root directory of this source tree.
  */
-import CodeSnippet   from 'components/CodeSnippet/CodeSnippet.react';
+import CodeSnippet from 'components/CodeSnippet/CodeSnippet.react';
 import DashboardView from 'dashboard/DashboardView.react';
-import EmptyState    from 'components/EmptyState/EmptyState.react';
-import FileTree      from 'components/FileTree/FileTree.react';
-import history       from 'dashboard/history';
-import React         from 'react';
-import styles        from 'dashboard/Data/CloudCode/CloudCode.scss';
-import Toolbar       from 'components/Toolbar/Toolbar.react';
+import EmptyState from 'components/EmptyState/EmptyState.react';
+import FileTree from 'components/FileTree/FileTree.react';
+import history from 'dashboard/history';
+import React from 'react';
+import styles from 'dashboard/Data/CloudCode/CloudCode.scss';
+import Toolbar from 'components/Toolbar/Toolbar.react';
 
-function getPath(params) {
-  console.log(params);
+function getPath() {
   return window.location.pathname.split('cloud_code/')[1];
-  return params.url || '';
 }
 
 export default class CloudCode extends DashboardView {
@@ -33,19 +31,19 @@ export default class CloudCode extends DashboardView {
   }
 
   componentWillMount() {
-    this.fetchSource(this.context.currentApp, getPath(this.props.params || this.props.match.params));
+    this.fetchSource(this.context.currentApp, getPath());
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
     if (this.context !== nextContext) {
-      this.fetchSource(nextContext.currentApp, getPath(nextProps.params || nextProps.match.params));
+      this.fetchSource(nextContext.currentApp, getPath());
     }
   }
 
   fetchSource(app, fileName) {
     app.getLatestRelease().then(
       (release) => {
-        this.setState({ files: release.files, source: undefined });
+        this.setState({files: release.files, source: undefined});
 
         if (!release.files || Object.keys(release.files).length === 0) {
           // Releases is empty. Show EmptyState
@@ -55,15 +53,17 @@ export default class CloudCode extends DashboardView {
         if (!fileName || release.files[fileName] === undefined) {
           // Means we're still in /cloud_code/. Let's redirect to /cloud_code/main.js
           history.replace(this.context.generatePath('cloud_code/main.js'))
+        } else if (release.files[fileName].source) {
+          this.setState({source: release.files[fileName].source});
         } else {
           // Means we can load /cloud_code/<fileName>
           app.getSource(fileName).then(
-            (source) => this.setState({ source: source }),
-            () => this.setState({ source: undefined })
+            (source) => this.setState({source: source}),
+            () => this.setState({source: undefined})
           );
         }
       },
-      () => this.setState({ files: undefined, source: undefined })
+      () => this.setState({files: undefined, source: undefined})
     );
   }
 
@@ -78,12 +78,12 @@ export default class CloudCode extends DashboardView {
       paths.push(key);
     }
     return (
-      <div style={{ overflowX: 'auto' }}>
-        <div style={{ borderLeft: '1px solid #3e87b2' }}>
+      <div style={{overflowX: 'auto'}}>
+        <div style={{borderLeft: '1px solid #3e87b2'}}>
           <FileTree
             linkPrefix={this.context.generatePath('cloud_code/')}
             current={current}
-            files={paths} />
+            files={paths}/>
         </div>
       </div>
     );
@@ -102,20 +102,20 @@ export default class CloudCode extends DashboardView {
             icon='folder-outline'
             description={'When you deploy your cloud code, you\u2019ll be able to see your files here'}
             cta='Get started with Cloud Code'
-            action={() => window.location = 'http://docs.parseplatform.org/cloudcode/guide'} />
+            action={() => window.location = 'http://docs.parseplatform.org/cloudcode/guide'}/>
         </div>
       );
     } else {
       if (fileName) {
         toolbar = <Toolbar
           section='Cloud Code'
-          subsection={fileName} />;
+          subsection={fileName}/>;
 
         let source = this.state.files[fileName];
         if (source && source.source) {
           content = (
             <div className={styles.content}>
-              <CodeSnippet source={source.source} language='javascript' />
+              <CodeSnippet source={source.source} language='javascript'/>
             </div>
           );
         }
