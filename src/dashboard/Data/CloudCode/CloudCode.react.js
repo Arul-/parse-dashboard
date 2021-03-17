@@ -15,6 +15,8 @@ import styles        from 'dashboard/Data/CloudCode/CloudCode.scss';
 import Toolbar       from 'components/Toolbar/Toolbar.react';
 
 function getPath(params) {
+  console.log(params);
+  return window.location.pathname.split('cloud_code/')[1];
   return params.url || '';
 }
 
