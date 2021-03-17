@@ -176,6 +176,7 @@ export default class ParseApp {
 
         let checksums = JSON.parse(latestRelease.checksums);
         let versions = JSON.parse(latestRelease.userFiles);
+        let sources = JSON.parse(latestRelease.sources);
         this.latestRelease.files = {};
 
         // The scripts can be in `/` or in `/cloud`. Let's check for both.
@@ -189,7 +190,7 @@ export default class ParseApp {
           this.latestRelease.files[c] = {
             checksum: checksums[c],
             version: versions[c],
-            source: null
+            source: sources[c]
           };
         }
       }
