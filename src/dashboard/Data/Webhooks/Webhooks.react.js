@@ -5,31 +5,31 @@
  * This source code is licensed under the license found in the LICENSE file in
  * the root directory of this source tree.
  */
-import Button                                from 'components/Button/Button.react';
-import Dropdown                              from 'components/Dropdown/Dropdown.react';
-import DropdownOption                        from 'components/Dropdown/Option.react';
-import EmptyState                            from 'components/EmptyState/EmptyState.react';
-import Field                                 from 'components/Field/Field.react';
-import FormModal                             from 'components/FormModal/FormModal.react';
-import Icon                                  from 'components/Icon/Icon.react';
-import Label                                 from 'components/Label/Label.react';
-import Modal                                 from 'components/Modal/Modal.react';
-import React                                 from 'react';
-import SidebarAction                         from 'components/Sidebar/SidebarAction';
-import subscribeTo                           from 'lib/subscribeTo';
-import TableHeader                           from 'components/Table/TableHeader.react';
-import TableView                             from 'dashboard/TableView.react';
-import TextInput                             from 'components/TextInput/TextInput.react';
-import Toolbar                               from 'components/Toolbar/Toolbar.react';
-import { ActionTypes as SchemaActionTypes }  from 'lib/stores/SchemaStore';
-import { ActionTypes as WebhookActionTypes } from 'lib/stores/WebhookStore';
+import Button from 'components/Button/Button.react';
+import Dropdown from 'components/Dropdown/Dropdown.react';
+import DropdownOption from 'components/Dropdown/Option.react';
+import EmptyState from 'components/EmptyState/EmptyState.react';
+import Field from 'components/Field/Field.react';
+import FormModal from 'components/FormModal/FormModal.react';
+import Icon from 'components/Icon/Icon.react';
+import Label from 'components/Label/Label.react';
+import Modal from 'components/Modal/Modal.react';
+import React from 'react';
+import SidebarAction from 'components/Sidebar/SidebarAction';
+import subscribeTo from 'lib/subscribeTo';
+import TableHeader from 'components/Table/TableHeader.react';
+import TableView from 'dashboard/TableView.react';
+import TextInput from 'components/TextInput/TextInput.react';
+import Toolbar from 'components/Toolbar/Toolbar.react';
+import {ActionTypes as SchemaActionTypes} from 'lib/stores/SchemaStore';
+import {ActionTypes as WebhookActionTypes} from 'lib/stores/WebhookStore';
 
-let TableWarning = ({ text }) => <div>
-  <Icon name='warn-outline' fill='#343445' width={20} height={20}/><span style={{ position: 'relative', top: '2px' }}> {text}</span>
+let TableWarning = ({text}) => <div>
+  <Icon name='warn-outline' fill='#343445' width={20} height={20}/><span
+  style={{position: 'relative', top: '2px'}}> {text}</span>
 </div>;
 
-export default
-@subscribeTo('Webhooks', 'webhooks')
+export default @subscribeTo('Webhooks', 'webhooks')
 @subscribeTo('Schema', 'schema')
 class Webhooks extends TableView {
   constructor() {
@@ -94,7 +94,10 @@ class Webhooks extends TableView {
       <Field
         label={<Label
           text='Webhook type'
-          description={<span>Learn about <a target='_blank' href='http://docs.parseplatform.org/cloudcode/guide#cloud-code-cloud-functions'>functions</a> and <a target='_blank' href='http://docs.parseplatform.org/cloudcode/guide#cloud-code-beforesave-triggers'>triggers</a>.</span>}
+          description={<span>Learn about <a target='_blank'
+                                            href='http://docs.parseplatform.org/cloudcode/guide#cloud-code-cloud-functions'>functions</a> and <a
+            target='_blank'
+            href='http://docs.parseplatform.org/cloudcode/guide#cloud-code-beforesave-triggers'>triggers</a>.</span>}
         />}
         input={<Dropdown
           onChange={value => {
@@ -108,42 +111,42 @@ class Webhooks extends TableView {
           <DropdownOption value={'afterSave'} key={'afterSave'}>afterSave</DropdownOption>
           <DropdownOption value={'beforeDelete'} key={'beforeDelete'}>beforeDelete</DropdownOption>
           <DropdownOption value={'afterDelete'} key={'afterDelete'}>afterDelete</DropdownOption>
-        </Dropdown>} />
-        {this.state.hookType === 'function' ? <Field
-          label={<Label text='Function name' description='This is how you will reference your webhook'/>}
-          input={<TextInput
-            placeholder='MyWebhook'
-            disabled={!this.state.showNewWebhookModal}
-            onChange={value => {
-              this.setState({functionName: value});
-            }}
-            value={this.state.functionName}
-          />} /> : <Field
-          label={<Label text='Choose a Class'/>}
-          input={<Dropdown
-            disabled={!this.state.showNewWebhookModal}
-            onChange={value => {
-              this.setState({triggerClass: value});
-            }}
-            value={this.state.triggerClass}
-            fixed={true}>
-              {/*TODO(drewgross)(non-blocking) display special classes without leading underscore*/}
-              {classNames.map(name => <DropdownOption key={name} value={name}>{name}</DropdownOption>)}
-          </Dropdown>} />
-        }
-        <Field
-          label={<Label text='Webhook URL' />}
-          input={<TextInput
-            disabled={this.state.showDeleteWebhookModal}
-            onChange={value => {
-              this.setState({hookURL: value})
-            }}
-            value={this.state.hookURL}
-          />} />
+        </Dropdown>}/>
+      {this.state.hookType === 'function' ? <Field
+        label={<Label text='Function name' description='This is how you will reference your webhook'/>}
+        input={<TextInput
+          placeholder='MyWebhook'
+          disabled={!this.state.showNewWebhookModal}
+          onChange={value => {
+            this.setState({functionName: value});
+          }}
+          value={this.state.functionName}
+        />}/> : <Field
+        label={<Label text='Choose a Class'/>}
+        input={<Dropdown
+          disabled={!this.state.showNewWebhookModal}
+          onChange={value => {
+            this.setState({triggerClass: value});
+          }}
+          value={this.state.triggerClass}
+          fixed={true}>
+          {/*TODO(drewgross)(non-blocking) display special classes without leading underscore*/}
+          {classNames.map(name => <DropdownOption key={name} value={name}>{name}</DropdownOption>)}
+        </Dropdown>}/>
+      }
+      <Field
+        label={<Label text='Webhook URL'/>}
+        input={<TextInput
+          disabled={this.state.showDeleteWebhookModal}
+          onChange={value => {
+            this.setState({hookURL: value})
+          }}
+          value={this.state.hookURL}
+        />}/>
     </div>
 
     let hookRequestData = ({hookURL, hookType, functionName, triggerClass}) => {
-      let data = { hookURL: hookURL };
+      let data = {hookURL: hookURL};
       if (hookType === 'function') {
         data.functionName = functionName;
       } else {
@@ -247,7 +250,7 @@ class Webhooks extends TableView {
         showDeleteWebhookModal: true,
       });
     } : null;
-    let rowStyle = hook.url ? { cursor: 'pointer' } : {};
+    let rowStyle = hook.url ? {cursor: 'pointer'} : {};
     let deleteColumnContents = null;
     if (hook.url) {
       deleteColumnContents = <a role='button' href='javascript:;' onClick={showDelete}>
@@ -258,14 +261,18 @@ class Webhooks extends TableView {
         otherHook.functionName == hook.functionName &&
         otherHook.triggerName == hook.triggerName);
       if (isOverridden) {
-        deleteColumnContents = <TableWarning text='Overridden' />;
+        deleteColumnContents = <TableWarning text='Overridden'/>;
       }
     }
+    let type = hook.className ? 'Trigger' : 'Function';
+    if (hook.url) type = 'Web ' + type;
+    let name = hook.className && hook.triggerName
+      ? hook.className + '.' + hook.triggerName
+      : hook.functionName || '';
     return <tr
       key={JSON.stringify(hook)}>
-      <td style={rowStyle} onClick={showEdit} width={'15%'}>{hook.functionName ? 'Function' : 'Trigger'}</td>
-      <td style={rowStyle} onClick={showEdit} width={'15%'}>{hook.className || ''}</td>
-      <td style={rowStyle} onClick={showEdit} width={'20%'}>{hook.functionName || hook.triggerName}</td>
+      <td style={rowStyle} onClick={showEdit} width={'15%'}>{type}</td>
+      <td style={rowStyle} onClick={showEdit} width={'35%'}>{name}</td>
       <td style={rowStyle} onClick={showEdit} width={'40%'}>{hook.url || 'Cloud Code'}</td>
       <td width={'10%'}>{deleteColumnContents}</td>
     </tr>;
@@ -274,8 +281,7 @@ class Webhooks extends TableView {
   renderHeaders() {
     return [
       <TableHeader width={15} key='Type'>Type</TableHeader>,
-      <TableHeader width={15} key='Class'>Class</TableHeader>,
-      <TableHeader width={20} key='Method'>Method</TableHeader>,
+      <TableHeader width={35} key='Class'>Function</TableHeader>,
       <TableHeader width={40} key='Destination'>Destination</TableHeader>,
       <TableHeader width={10} key='Delete'>&nbsp;</TableHeader>,
     ];
@@ -284,10 +290,12 @@ class Webhooks extends TableView {
   renderEmpty() {
     return <EmptyState
       title='Hooks'
-      description={<span>Use webhooks to run Cloud Code or connect Parse to your own server. <a href='http://docs.parseplatform.org/cloudcode/guide/#cloud-code-webhooks' target='_blank'>Learn more</a>.</span>}
+      description={<span>Use webhooks to run Cloud Code or connect Parse to your own server. <a
+        href='http://docs.parseplatform.org/cloudcode/guide/#cloud-code-webhooks'
+        target='_blank'>Learn more</a>.</span>}
       icon='gears'
       cta='Create a Webhook'
-      action={this.openNewWebhookModal.bind(this)} />
+      action={this.openNewWebhookModal.bind(this)}/>
   }
 
   tableData() {
