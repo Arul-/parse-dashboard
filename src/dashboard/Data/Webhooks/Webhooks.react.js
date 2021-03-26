@@ -257,22 +257,25 @@ class Webhooks extends TableView {
         <Icon name='trash-outline' fill='#343445' width={20} height={20}/>
       </a>;
     } else {
-      let isOverridden = !!this.tableData().find(otherHook => otherHook.url &&
-        otherHook.functionName == hook.functionName &&
-        otherHook.triggerName == hook.triggerName);
+      let isOverridden = !!this.tableData().find(otherHook =>
+        otherHook.url &&
+        otherHook.functionName === hook.functionName &&
+        otherHook.triggerName === hook.triggerName &&
+        otherHook.className === hook.className
+      );
       if (isOverridden) {
         deleteColumnContents = <TableWarning text='Overridden'/>;
       }
     }
     let type = hook.className ? 'Trigger' : 'Function';
-    if (hook.url) type = 'Web ' + type;
+    if (hook.url) type = 'Web' + type;
     let name = hook.className && hook.triggerName
       ? hook.className + '.' + hook.triggerName
       : hook.functionName || '';
     return <tr
       key={JSON.stringify(hook)}>
-      <td style={rowStyle} onClick={showEdit} width={'15%'}>{type}</td>
       <td style={rowStyle} onClick={showEdit} width={'35%'}>{name}</td>
+      <td style={rowStyle} onClick={showEdit} width={'15%'}>{type}</td>
       <td style={rowStyle} onClick={showEdit} width={'40%'}>{hook.url || 'Cloud Code'}</td>
       <td width={'10%'}>{deleteColumnContents}</td>
     </tr>;
@@ -280,8 +283,8 @@ class Webhooks extends TableView {
 
   renderHeaders() {
     return [
+      <TableHeader width={35} key='Name'>Name</TableHeader>,
       <TableHeader width={15} key='Type'>Type</TableHeader>,
-      <TableHeader width={35} key='Class'>Function</TableHeader>,
       <TableHeader width={40} key='Destination'>Destination</TableHeader>,
       <TableHeader width={10} key='Delete'>&nbsp;</TableHeader>,
     ];
