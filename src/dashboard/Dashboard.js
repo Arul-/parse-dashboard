@@ -141,7 +141,7 @@ export default class Dashboard extends React.Component {
             {},
             { useMasterKey: true }
           ).then(serverInfo => {
-            delete serverInfo.features.push
+            //serverInfo.features.push=false;
             serverInfo.features.schemas.addField=false;
             app.serverInfo = serverInfo;
             return app;
