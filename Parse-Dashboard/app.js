@@ -124,7 +124,6 @@ module.exports = function(config, options) {
               const isSame = app.appId === appUserHasAccess.appId;
               if (isSame && appUserHasAccess.readOnly) {
                 app.masterKey = app.readOnlyMasterKey;
-                console.log(req.user);
               }
               return isSame;
             })
@@ -147,6 +146,15 @@ module.exports = function(config, options) {
       }
       //We shouldn't get here. Fail closed.
       res.send({ success: false, error: 'Something went wrong.' });
+    });
+
+    // Serve what features allowed for logged in user
+    app.get('/allowed-features.json', function (req, res) {
+      if (users && req.user && req.user.matchingUsername) {
+        const found = users.find(i => i.user === req.user.matchingUsername);
+        return res.json(found.features || {});
+      }
+      return res.json({});
     });
 
     // Serve the app icons. Uses the optional `iconsFolder` parameter as
