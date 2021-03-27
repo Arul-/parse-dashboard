@@ -271,7 +271,10 @@ export default class DataBrowser extends React.Component {
           className={SpecialClasses[className] || className}
           classNameForEditors={className}
           setCurrent={this.setCurrent}
+          enableClassAddition={this.context.currentApp.serverInfo.features.schemas.addClass}
           enableClassDeletion={this.context.currentApp.serverInfo.features.schemas.removeClass}
+          enableColumnAddition={this.context.currentApp.serverInfo.features.schemas.addField}
+          enableColumnDeletion={this.context.currentApp.serverInfo.features.schemas.removeField}
           enableDeleteAllRows={this.context.currentApp.serverInfo.features.schemas.clearAllDataFromClass && !preventSchemaEdits}
           enableExportClass={this.context.currentApp.serverInfo.features.schemas.exportClass && !preventSchemaEdits}
           enableSecurityDialog={this.context.currentApp.serverInfo.features.schemas.editClassLevelPermissions && !disableSecurityDialog && !preventSchemaEdits}

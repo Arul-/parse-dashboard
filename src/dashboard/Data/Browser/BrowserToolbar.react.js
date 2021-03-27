@@ -57,7 +57,10 @@ let BrowserToolbar = ({
 
   enableColumnManipulation,
   enableClassManipulation,
+  enableClassAddition,
   enableClassDeletion,
+  enableColumnAddition,
+  enableColumnDeletion,
 }) => {
   let selectionLength = Object.keys(selection).length;
   let details = [];
@@ -107,8 +110,8 @@ let BrowserToolbar = ({
       <BrowserMenu title='Edit' icon='edit-solid' disabled={isUnique}>
         <MenuItem text='Add a row' onClick={onAddRow} />
         <MenuItem text='Add a row with modal' onClick={onAddRowWithModal} />
-        {enableColumnManipulation ? <MenuItem text='Add a column' onClick={onAddColumn} /> : <noscript />}
-        {enableClassManipulation ? <MenuItem text='Add a class' onClick={onAddClass} /> : <noscript />}
+        {enableColumnAddition && enableColumnManipulation ? <MenuItem text='Add a column' onClick={onAddColumn} /> : <noscript />}
+        {enableClassAddition && enableClassManipulation ? <MenuItem text='Add a class' onClick={onAddClass} /> : <noscript />}
         <Separator />
         <MenuItem
           disabled={selectionLength !== 1}
@@ -132,7 +135,7 @@ let BrowserToolbar = ({
           disabled={selectionLength === 0}
           text={selectionLength === 1 && !selection['*'] ? 'Delete this row' : 'Delete these rows'}
           onClick={() => onDeleteRows(selection)} />
-        {enableColumnManipulation ? <MenuItem text='Delete a column' onClick={onRemoveColumn} /> : <noscript />}
+        {enableColumnDeletion && enableColumnManipulation ? <MenuItem text='Delete a column' onClick={onRemoveColumn} /> : <noscript />}
         {enableDeleteAllRows ? <MenuItem text='Delete all rows' onClick={() => onDeleteRows({ '*': true })} /> : <noscript />}
         {enableClassDeletion && enableClassManipulation ? <MenuItem text='Delete this class' onClick={onDropClass} /> : <noscript />}
         {enableExportClass ? <Separator /> : <noscript />}
