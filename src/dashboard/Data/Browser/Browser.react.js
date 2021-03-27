@@ -125,7 +125,7 @@ class Browser extends DashboardView {
 
   componentWillMount() {
     const { currentApp } = this.context;
-    if (!currentApp.preventSchemaEdits) {
+    if (!currentApp.preventSchemaEdits && currentApp.serverInfo.features.schemas.addClass) {
       this.action = new SidebarAction('Create a class', this.showCreateClass.bind(this));
     }
 
