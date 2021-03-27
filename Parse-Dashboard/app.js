@@ -117,13 +117,14 @@ module.exports = function(config, options) {
 
       if (successfulAuth) {
         if (appsUserHasAccess) {
-          // Restric access to apps defined in user dictionary
+          // Restrict access to apps defined in user dictionary
           // If they didn't supply any app id, user will access all apps
           response.apps = response.apps.filter(function (app) {
             return appsUserHasAccess.find(appUserHasAccess => {
               const isSame = app.appId === appUserHasAccess.appId;
               if (isSame && appUserHasAccess.readOnly) {
                 app.masterKey = app.readOnlyMasterKey;
+                console.log(req.user);
               }
               return isSame;
             })
