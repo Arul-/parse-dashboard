@@ -30,11 +30,7 @@ export default class DashboardView extends React.Component {
     let features = this.context.currentApp.serverInfo.features;
 
     let coreSubsections = [];
-    if (features.schemas &&
-      features.schemas.addField &&
-      features.schemas.removeField &&
-      features.schemas.addClass &&
-      features.schemas.removeClass) {
+    if (features.schemas) {
       coreSubsections.push({
         name: 'Browser',
         link: '/browser'
