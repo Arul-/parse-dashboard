@@ -57,6 +57,7 @@ let BrowserToolbar = ({
 
   enableColumnManipulation,
   enableClassManipulation,
+  enableClassDeletion,
 }) => {
   let selectionLength = Object.keys(selection).length;
   let details = [];
@@ -133,7 +134,7 @@ let BrowserToolbar = ({
           onClick={() => onDeleteRows(selection)} />
         {enableColumnManipulation ? <MenuItem text='Delete a column' onClick={onRemoveColumn} /> : <noscript />}
         {enableDeleteAllRows ? <MenuItem text='Delete all rows' onClick={() => onDeleteRows({ '*': true })} /> : <noscript />}
-        {enableClassManipulation ? <MenuItem text='Delete this class' onClick={onDropClass} /> : <noscript />}
+        {enableClassDeletion && enableClassManipulation ? <MenuItem text='Delete this class' onClick={onDropClass} /> : <noscript />}
         {enableExportClass ? <Separator /> : <noscript />}
         {enableExportClass ? <MenuItem text='Export this data' onClick={onExport} /> : <noscript />}
       </BrowserMenu>
