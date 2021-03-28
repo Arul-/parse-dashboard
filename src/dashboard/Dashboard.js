@@ -5,57 +5,53 @@
  * This source code is licensed under the license found in the LICENSE file in
  * the root directory of this source tree.
  */
-import AccountOverview    from './Account/AccountOverview.react';
-import AccountView        from './AccountView.react';
-import AnalyticsOverview  from './Analytics/Overview/Overview.react';
-import ApiConsole         from './Data/ApiConsole/ApiConsole.react';
-import AppData            from './AppData.react';
-import AppsIndex          from './Apps/AppsIndex.react';
-import AppsManager        from 'lib/AppsManager';
-import Browser            from './Data/Browser/Browser.react';
-import CloudCode          from './Data/CloudCode/CloudCode.react';
-import Config             from './Data/Config/Config.react';
-import Explorer           from './Analytics/Explorer/Explorer.react';
-import FourOhFour         from 'components/FourOhFour/FourOhFour.react';
-import GeneralSettings    from './Settings/GeneralSettings.react';
-import GraphQLConsole     from './Data/ApiConsole/GraphQLConsole.react';
-import history            from 'dashboard/history';
-import HostingSettings    from './Settings/HostingSettings.react';
-import Icon               from 'components/Icon/Icon.react';
-import JobEdit            from 'dashboard/Data/Jobs/JobEdit.react';
-import Jobs               from './Data/Jobs/Jobs.react';
-import JobsData           from 'dashboard/Data/Jobs/JobsData.react';
-import Loader             from 'components/Loader/Loader.react';
-import Logs               from './Data/Logs/Logs.react';
-import Migration          from './Data/Migration/Migration.react';
-import ParseApp           from 'lib/ParseApp';
-import Performance        from './Analytics/Performance/Performance.react';
+import AccountOverview from './Account/AccountOverview.react';
+import AccountView from './AccountView.react';
+import AnalyticsOverview from './Analytics/Overview/Overview.react';
+import ApiConsole from './Data/ApiConsole/ApiConsole.react';
+import AppData from './AppData.react';
+import AppsIndex from './Apps/AppsIndex.react';
+import AppsManager from 'lib/AppsManager';
+import Browser from './Data/Browser/Browser.react';
+import CloudCode from './Data/CloudCode/CloudCode.react';
+import Config from './Data/Config/Config.react';
+import Explorer from './Analytics/Explorer/Explorer.react';
+import FourOhFour from 'components/FourOhFour/FourOhFour.react';
+import GeneralSettings from './Settings/GeneralSettings.react';
+import GraphQLConsole from './Data/ApiConsole/GraphQLConsole.react';
+import history from 'dashboard/history';
+import HostingSettings from './Settings/HostingSettings.react';
+import Icon from 'components/Icon/Icon.react';
+import JobEdit from 'dashboard/Data/Jobs/JobEdit.react';
+import Jobs from './Data/Jobs/Jobs.react';
+import JobsData from 'dashboard/Data/Jobs/JobsData.react';
+import Loader from 'components/Loader/Loader.react';
+import Logs from './Data/Logs/Logs.react';
+import Migration from './Data/Migration/Migration.react';
+import ParseApp from 'lib/ParseApp';
+import Performance from './Analytics/Performance/Performance.react';
 import PushAudiencesIndex from './Push/PushAudiencesIndex.react';
-import PushDetails        from './Push/PushDetails.react';
-import PushIndex          from './Push/PushIndex.react';
-import PushNew            from './Push/PushNew.react';
-import PushSettings       from './Settings/PushSettings.react';
-import React              from 'react';
-import RestConsole        from './Data/ApiConsole/RestConsole.react';
-import Retention          from './Analytics/Retention/Retention.react';
-import SchemaOverview     from './Data/Browser/SchemaOverview.react';
-import SecuritySettings   from './Settings/SecuritySettings.react';
-import SettingsData       from './Settings/SettingsData.react';
-import SlowQueries        from './Analytics/SlowQueries/SlowQueries.react';
-import styles             from 'dashboard/Apps/AppsIndex.scss';
-import UsersSettings      from './Settings/UsersSettings.react';
-import Webhooks           from './Data/Webhooks/Webhooks.react';
-import { AsyncStatus }    from 'lib/Constants';
-import { center }         from 'stylesheets/base.scss';
-import { get }            from 'lib/AJAX';
-import { setBasePath }    from 'lib/AJAX';
-import {
-  Router,
-  Switch,
-} from 'react-router';
-import { Route, Redirect } from 'react-router-dom';
+import PushDetails from './Push/PushDetails.react';
+import PushIndex from './Push/PushIndex.react';
+import PushNew from './Push/PushNew.react';
+import PushSettings from './Settings/PushSettings.react';
+import React from 'react';
+import RestConsole from './Data/ApiConsole/RestConsole.react';
+import Retention from './Analytics/Retention/Retention.react';
+import SchemaOverview from './Data/Browser/SchemaOverview.react';
+import SecuritySettings from './Settings/SecuritySettings.react';
+import SettingsData from './Settings/SettingsData.react';
+import SlowQueries from './Analytics/SlowQueries/SlowQueries.react';
+import styles from 'dashboard/Apps/AppsIndex.scss';
+import UsersSettings from './Settings/UsersSettings.react';
+import Webhooks from './Data/Webhooks/Webhooks.react';
+import {AsyncStatus} from 'lib/Constants';
+import {center} from 'stylesheets/base.scss';
+import {get, setBasePath} from 'lib/AJAX';
+import {Router, Switch,} from 'react-router';
+import {Redirect, Route} from 'react-router-dom';
 import createClass from 'create-react-class';
-import { Helmet } from 'react-helmet';
+import {Helmet} from 'react-helmet';
 import Playground from './Data/Playground/Playground.react';
 
 const ShowSchemaOverview = false; //In progress features. Change false to true to work on this feature.
@@ -134,15 +130,30 @@ export default class Dashboard extends React.Component {
           app.serverInfo = PARSE_DOT_COM_SERVER_INFO;
           return Promise.resolve(app);
         } else {
-          app.serverInfo = {}
+          app.serverInfo = {features: {}}
           return new ParseApp(app).apiRequest(
             'GET',
             'serverInfo',
             {},
             { useMasterKey: true }
-          ).then(serverInfo => {
-            //serverInfo.features.push=false;
-            serverInfo.features.schemas.addField=false;
+          ).then(async serverInfo => {
+            const allowed = await get('/allowed-features.json');
+            if(Object.keys(allowed).length === 0){
+              console.log('allowed', allowed, app);
+              app.serverInfo = serverInfo;
+              return app;
+            }
+            if (serverInfo.features.schemas && !allowed.schemas) {
+              delete serverInfo.features.schemas;
+            } else if (serverInfo.features.schemas && allowed.schemas) {
+              serverInfo.features.schemas = allowed.schemas;
+            }
+            if (serverInfo.features.push && !allowed.push) {
+              delete serverInfo.features.push;
+            } else if (serverInfo.features.push && allowed.push) {
+              serverInfo.features.push = allowed.push;
+            }
+            console.log(serverInfo);
             app.serverInfo = serverInfo;
             return app;
           }, error => {
