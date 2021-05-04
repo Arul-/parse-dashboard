@@ -42,6 +42,7 @@ import SchemaOverview     from './Data/Browser/SchemaOverview.react';
 import SecuritySettings   from './Settings/SecuritySettings.react';
 import SettingsData       from './Settings/SettingsData.react';
 import SlowQueries        from './Analytics/SlowQueries/SlowQueries.react';
+import ServerConfig       from './Data/Config/ServerConfig.react';
 import styles             from 'dashboard/Apps/AppsIndex.scss';
 import UsersSettings      from './Settings/UsersSettings.react';
 import Webhooks           from './Data/Webhooks/Webhooks.react';
@@ -292,6 +293,7 @@ export default class Dashboard extends React.Component {
           <Redirect from={ match.path + '/logs' } to='/apps/:appId/logs/info' />
 
           <Route path={ match.path + '/config' } component={Config} />
+          <Route path={ match.path + '/server_config' } component={ServerConfig} />
           <Route path={ match.path + '/api_console' } component={ApiConsoleRoute} />
           <Route path={ match.path + '/migration' } component={Migration} />
 
