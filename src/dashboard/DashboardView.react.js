@@ -75,6 +75,10 @@ export default class DashboardView extends React.Component {
         name: 'Config',
         link: '/config'
       });
+      coreSubsections.push({
+        name: 'Server Config',
+        link: '/server_config'
+      });
     }
 
     coreSubsections.push({
