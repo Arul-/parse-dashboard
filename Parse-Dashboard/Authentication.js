@@ -52,6 +52,7 @@ function initialize(app, options) {
     secret : cookieSessionSecret,
     cookie : {
       secure: true,
+      httpOnly: true,
       maxAge: (2 * 7 * 24 * 60 * 60 * 1000) // 2 weeks
     }
   }));
