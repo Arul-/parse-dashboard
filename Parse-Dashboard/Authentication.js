@@ -70,7 +70,7 @@ function initialize(app, options) {
 
   app.get('/logout', function(req, res){
     req.logout();
-    res.redirect(`${self.mountPath}login`);
+    req.session.destroy(() => res.redirect(`${self.mountPath}login`))
   });
 }
 
