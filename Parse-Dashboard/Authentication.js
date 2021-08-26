@@ -51,6 +51,7 @@ function initialize(app, options) {
     key    : 'parse_dash',
     secret : cookieSessionSecret,
     cookie : {
+      secure: true,
       maxAge: (2 * 7 * 24 * 60 * 60 * 1000) // 2 weeks
     }
   }));
