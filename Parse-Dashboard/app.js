@@ -5,6 +5,13 @@ const packageJson = require('package-json');
 const csrf = require('csurf');
 const Authentication = require('./Authentication.js');
 var fs = require('fs');
+const rateLimit = require('express-rate-limit')
+
+const createAccountLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 1 hour window
+  max: 20, // start blocking after 20 requests
+  message: 'Too many accounts created from this IP, please try again after an hour'
+})
 
 const currentVersionFeatures = require('../package.json').parseDashboardFeatures;
 
@@ -36,8 +43,7 @@ function checkIfIconsExistForApps(apps, iconsFolder) {
           if ('ENOENT' == err.code) {// file does not exist
               console.warn('Icon with file name: ' + iconName +' couldn\'t be found in icons folder!');
           } else {
-            console.log(
-              'An error occurd while checking for icons, please check permission!');
+            console.log('An error occurred while checking for icons, please check permission!');
           }
       } else {
           //every thing was ok so for example you can read it and send it to client
@@ -176,7 +182,7 @@ module.exports = function(config, options) {
       }
     }
 
-    app.get('/login', csrf(), function(req, res) {
+    app.get('/login', createAccountLimiter, csrf(), function(req, res) {
       if (!users || (req.user && req.user.isAuthenticated)) {
         return res.redirect(`${mountPath}apps`);
       }
