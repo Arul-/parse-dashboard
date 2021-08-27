@@ -4,6 +4,7 @@ const path = require('path');
 const packageJson = require('package-json');
 const csrf = require('csurf');
 const Authentication = require('./Authentication.js');
+const session = require('express-session');
 var fs = require('fs');
 const rateLimit = require('express-rate-limit')
 
@@ -62,6 +63,15 @@ module.exports = function(config, options) {
   if (config.trustProxy && app.disabled('trust proxy')) {
     app.enable('trust proxy');
   }
+
+  app.use(session({
+    secret: options.cookieSessionSecret || require('crypto').randomBytes(64).toString('hex'),
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: 'auto'
+    }
+  }))
 
   // wait for app to mount in order to get mountpath
   app.on('mount', function() {
