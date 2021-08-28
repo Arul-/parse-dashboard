@@ -31,26 +31,26 @@ function checkIfIconsExistForApps(apps, iconsFolder) {
     var iconName = currentApp.iconName;
     var path = iconsFolder + '/' + iconName;
 
-    fs.stat(path, function(err) {
+    fs.stat(path, function (err) {
       if (err) {
-          if ('ENOENT' == err.code) {// file does not exist
-              console.warn('Icon with file name: ' + iconName +' couldn\'t be found in icons folder!');
-          } else {
-            console.log(
-              'An error occurd while checking for icons, please check permission!');
-          }
+        if ('ENOENT' == err.code) {// file does not exist
+          console.warn('Icon with file name: ' + iconName + ' couldn\'t be found in icons folder!');
+        } else {
+          console.log(
+            'An error occurd while checking for icons, please check permission!');
+        }
       } else {
-          //every thing was ok so for example you can read it and send it to client
+        //every thing was ok so for example you can read it and send it to client
       }
-  } );
+    });
   }
 }
 
-module.exports = function(config, options) {
-  options = options || {};
+module.exports = function (config, options) {
+  options = options || { };
   var app = express();
   // Serve public files.
-  app.use(express.static(path.join(__dirname,'public')));
+  app.use(express.static(path.join(__dirname, 'public')));
 
   // Allow setting via middleware
   if (config.trustProxy && app.disabled('trust proxy')) {
@@ -58,12 +58,12 @@ module.exports = function(config, options) {
   }
 
   // wait for app to mount in order to get mountpath
-  app.on('mount', function() {
+  app.on('mount', function () {
     const mountPath = getMount(app.mountpath);
     const users = config.users;
     const useEncryptedPasswords = config.useEncryptedPasswords ? true : false;
     const authInstance = config.authInstance || new Authentication(users, useEncryptedPasswords, mountPath);
-    authInstance.initialize(app, { cookieSessionSecret: options.cookieSessionSecret });
+    authInstance.initialize(app, { cookieSessionSecret: options.cookieSessionSecret, config });
 
     // CSRF error handler
     app.use(function (err, req, res, next) {
@@ -75,8 +75,8 @@ module.exports = function(config, options) {
     });
 
     // Serve the configuration.
-    app.get('/parse-dashboard-config.json', function(req, res) {
-      let apps = config.apps.map((app) => Object.assign({}, app)); // make a copy
+    app.get('/parse-dashboard-config.json', function (req, res) {
+      let apps = config.apps.map((app) => Object.assign({ }, app)); // make a copy
       let response = {
         apps: apps,
         newFeaturesInLatestVersion: newFeaturesInLatestVersion,
@@ -152,9 +152,9 @@ module.exports = function(config, options) {
     app.get('/allowed-features.json', function (req, res) {
       if (users && req.user && req.user.matchingUsername) {
         const found = users.find(i => i.user === req.user.matchingUsername);
-        return res.json(found.features || {});
+        return res.json(found.features || { });
       }
-      return res.json({});
+      return res.json({ });
     });
 
     // Serve the app icons. Uses the optional `iconsFolder` parameter as
@@ -216,11 +216,11 @@ module.exports = function(config, options) {
     });
 
     // For every other request, go to index.html. Let client-side handle the rest.
-    app.get('/*', function(req, res) {
+    app.get('/*', function (req, res) {
       if (users && (!req.user || !req.user.isAuthenticated)) {
         return res.redirect(`${mountPath}login`);
       }
-      if (users && req.user && req.user.matchingUsername ) {
+      if (users && req.user && req.user.matchingUsername) {
         res.append('username', req.user.matchingUsername);
       }
       const customBrandIcon = config.customBrandIcon;

@@ -3,6 +3,9 @@ var bcrypt = require('bcryptjs');
 var csrf = require('csurf');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+const session = require('express-session');
+const redis = require('redis');
+const connectRedis = require('connect-redis');
 
 /**
  * Constructor for Authentication class
@@ -18,10 +21,10 @@ function Authentication(validUsers, useEncryptedPasswords, mountPath) {
 }
 
 function initialize(app, options) {
-  options = options || {};
+  options = options || { };
   var self = this;
   passport.use('local', new LocalStrategy(
-    function(username, password, cb) {
+    function (username, password, cb) {
       var match = self.authenticate({
         name: username,
         pass: password
@@ -33,11 +36,11 @@ function initialize(app, options) {
     })
   );
 
-  passport.serializeUser(function(username, cb) {
+  passport.serializeUser(function (username, cb) {
     cb(null, username);
   });
 
-  passport.deserializeUser(function(username, cb) {
+  passport.deserializeUser(function (username, cb) {
     var user = self.authenticate({
       name: username
     }, true);
@@ -47,13 +50,30 @@ function initialize(app, options) {
   var cookieSessionSecret = options.cookieSessionSecret || require('crypto').randomBytes(64).toString('hex');
   app.use(require('connect-flash')());
   app.use(require('body-parser').urlencoded({ extended: true }));
-  app.use(require('cookie-session')({
-    key    : 'parse_dash',
-    secret : cookieSessionSecret,
-    cookie : {
-      maxAge: (2 * 7 * 24 * 60 * 60 * 1000) // 2 weeks
+  app.set('trust proxy', 1);
+  const RedisStore = connectRedis(session)
+  const redisClient = redis.createClient(options.config.redisOptions || {
+    host: 'localhost',
+    port: 6379
+  })
+  redisClient.on('error', function (err) {
+    console.log('Could not establish a connection with redis. ' + err);
+  });
+  redisClient.on('connect', function (err) {
+    console.log('Connected to redis successfully');
+  });
+  app.use(session({
+    store: new RedisStore({ client: redisClient }),
+    secret: cookieSessionSecret,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false, // if true only transmit cookie over https
+      httpOnly: false, // if true prevent client side JS from reading the cookie
+      maxAge: 1000 * 60 * 10 // session max age in miliseconds
     }
-  }));
+  }))
+
   app.use(passport.initialize());
   app.use(passport.session());
 
@@ -62,13 +82,17 @@ function initialize(app, options) {
     passport.authenticate('local', {
       successRedirect: `${self.mountPath}apps`,
       failureRedirect: `${self.mountPath}login`,
-      failureFlash : true
+      failureFlash: true
     })
   );
 
-  app.get('/logout', function(req, res){
-    req.logout();
-    res.redirect(`${self.mountPath}login`);
+  app.get('/logout', function (req, res) {
+    req.session.destroy(err => {
+      if (err) {
+        return console.log(err);
+      }
+      res.redirect(`${self.mountPath}login`);
+    });
   });
 }
 
