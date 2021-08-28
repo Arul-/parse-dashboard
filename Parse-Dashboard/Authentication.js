@@ -6,6 +6,7 @@ var LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
 const redis = require('redis');
 const connectRedis = require('connect-redis');
+const rateLimit = require('express-rate-limit')
 
 /**
  * Constructor for Authentication class
@@ -51,6 +52,11 @@ function initialize(app, options) {
   app.use(require('connect-flash')());
   app.use(require('body-parser').urlencoded({ extended: true }));
   app.set('trust proxy', 1);
+  const createAccountLimiter = rateLimit(options.config.rateLimitOptions || {
+    windowMs: 5 * 60 * 1000, // 1 hour window
+    max: 20, // start blocking after 50 requests
+    message: 'Too many accounts created from this IP, please try again after an hour'
+  })
   const RedisStore = connectRedis(session)
   const redisClient = redis.createClient(options.config.redisOptions || {
     host: 'localhost',
@@ -78,6 +84,7 @@ function initialize(app, options) {
   app.use(passport.session());
 
   app.post('/login',
+    createAccountLimiter,
     csrf(),
     passport.authenticate('local', {
       successRedirect: `${self.mountPath}apps`,
